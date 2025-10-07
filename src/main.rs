@@ -25,12 +25,11 @@ async fn main() -> Result<()> {
     let pod_list = find_matching_pods(pods, &args.pod_part).await.expect("Failed to find matching pods");
     
     let pod = pod_list
-        .get(args.container_index)
+        .get(args.index)
         .cloned()
         .ok_or_else(|| anyhow::anyhow!("Pod not found"))?;
 
     let pod_name = &pod.name().ok_or_else(|| anyhow::anyhow!("Pod name not found"))?;
-    println!("{}", pod_name);
 
     let mut cmd = Command::new("kubectl");
 

@@ -6,10 +6,10 @@
 pub struct Args {
     /// Partial name of the pod to match
     pub pod_part: String,
-    /// Index of the container (0-based)
-    pub container_index: usize,
+    /// Index of the pod (0-based)
+    pub index: usize,
     /// Follow the log stream
-    #[arg(long)]
+    #[arg(short = 'f', long)]
     pub follow: bool,
     /// Lines from the end of the logs to show
     #[arg(long, default_value_t = 100)]
