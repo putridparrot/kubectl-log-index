@@ -8,7 +8,6 @@ You can ofcourse use
 ```aiignore
 kubectl log pod echo-pod-h5dvf -n dev
 ```
-for example.
 
 But it can be a bit tedious to remember the exact name of the pod.
 
