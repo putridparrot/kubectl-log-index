@@ -39,4 +39,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: release-${{ matrix.target }}
-        path: target/${{ matrix.target }}/release/kubectl-log-index
+        path: target/${{ matrix.target }}/release/kubectl-log-index*
+
