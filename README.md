@@ -65,6 +65,5 @@ Colour options are auto, always, never. Auto is the default and will colour the 
 # Windows
 
 - Copy it to a folder in your PATH: Recommended locations:
-- C:\Users\<YourUsername>\.kube\plugins\ (create this if it doesn’t exist)
 - Or: C:\Users\<YourUsername>\AppData\Local\Microsoft\WindowsApps\
 - Or: any folder already listed in your system’s PATH environment variable
