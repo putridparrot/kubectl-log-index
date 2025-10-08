@@ -62,6 +62,12 @@ kubectl log index <pod-partial-name> <space-delimited-indicies> --namespace <nam
 
 Colour options are auto, always, never. Auto is the default and will colour the logs if the output is a terminal.
 
+We can also log all pods with the same partial name using the --all-pods (short form -a) option.
+
+```aiignore
+kubectl log index <pod-partial-name> --all-pods --namespace <namespace> --color=auto
+```
+
 # Windows
 
 - Copy it to a folder in your PATH: Recommended locations:
