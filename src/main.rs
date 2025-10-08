@@ -31,13 +31,17 @@ async fn main() -> Result<()> {
         .chain(args.positional_indices.clone())
         .collect::<Vec<_>>();
 
-    let pods: Vec<Pod> = indices.iter()
-        .map(|&i| {
-            pod_list.get(i)
-                .cloned()
-                .ok_or_else(|| anyhow::anyhow!("Pod index {} not found", i))
-        })
-        .collect::<Result<Vec<_>, _>>()?;
+    let pods: Vec<Pod> = if args.all_pods {
+        pod_list.clone()
+    } else {
+        indices.iter()
+            .map(|&i| {
+                pod_list.get(i)
+                    .cloned()
+                    .ok_or_else(|| anyhow::anyhow!("Pod index {} not found", i))
+            })
+            .collect::<Result<Vec<_>, _>>()?
+    };
 
     let pod_names: Vec<String> = pods
         .iter()

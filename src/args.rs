@@ -31,4 +31,7 @@ pub struct Args {
     /// Control colored output: always, auto, or never
     #[arg(long, default_value = "auto")]
     pub color: ColorChoice,
+    /// Follow the log stream
+    #[arg(short='a', long="all-pods")]
+    pub all_pods: bool,
 }
