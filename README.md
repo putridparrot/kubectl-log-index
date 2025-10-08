@@ -40,11 +40,27 @@ kubectl plugin list
 
 # Usage
 
+Basic usage is
+
 ```aiignore
 kubectl log index <pod-partial-name> <index> --namespace <namespace>
 kubectl log index <pod-partial-name> <index> -n <namespace>
 kubectl log index <pod-partial-name> <index> -n <namespace> -f --tail <lines>
 ```
+
+We also have the option to merge logs from multiple pods with the same partial name
+
+```aiignore
+kubectl log index <pod-partial-name> <space-delimited-indicies> --namespace <namespace>
+```
+
+In such situations, by default the logs for each pod are coloured differently. If you want to merge the logs, you can use the --no-color option. 
+
+```aiignore
+kubectl log index <pod-partial-name> <space-delimited-indicies> --namespace <namespace> --color=auto
+```
+
+Colour options are auto, always, never. Auto is the default and will colour the logs if the output is a terminal.
 
 # Windows
 
