@@ -68,6 +68,17 @@ We can also log all pods with the same partial name using the --all-pods (short 
 kubectl log index <pod-partial-name> --all-pods --namespace <namespace> --color=auto
 ```
 
+Show only lines with matching text using the --match option.
+
+```aiignore
+kubectl log index <pod-partial-name> --all-pods --namespace <namespace> --match <text>
+```
+Or show only lines not matching text using the --invert-match option.
+
+```aiignore
+kubectl log index <pod-partial-name> --all-pods --namespace <namespace> --match <text> --invert-match
+```
+
 # Windows
 
 - Copy it to a folder in your PATH: Recommended locations:

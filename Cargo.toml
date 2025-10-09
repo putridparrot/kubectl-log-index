@@ -1,6 +1,6 @@
 [package]
 name = "kubectl-log-index"
-version = "0.3.0"
+version = "0.5.0"
 edition = "2024"
 
 [dependencies]
@@ -11,4 +11,3 @@ clap = { version = "4", features = ["derive"] }
 anyhow = "1.0"
 colored = "3.0.0"
 atty = "0.2.14"
-

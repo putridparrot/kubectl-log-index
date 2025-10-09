@@ -57,8 +57,10 @@ async fn main() -> Result<()> {
         |s| s.bright_white().to_string(),
         |s| s.cyan().to_string(),
         |s| s.magenta().to_string(),
+        |s| s.bright_green().to_string(),
         |s| s.blue().to_string(),
         |s| s.purple().to_string(),
+        |s| s.bright_blue().to_string(),
     ];
 
     let mut handles = Vec::new();
@@ -70,7 +72,7 @@ async fn main() -> Result<()> {
         let colorize = if should_color(&args.color) {
             colorizers[i % colorizers.len()]
         } else {
-            |s: &str| s.white().to_string()
+            |s: &str| s.to_string()
         };
 
         let handle = thread::spawn(move || {
@@ -117,12 +119,23 @@ fn fetch_logs_for_pod(args: &Args, namespace: &str, pod_name: &str,
     for line in reader.lines() {
         match line {
             Ok(text) => {
-                if text.contains("ERROR") {
-                    println!("{}", text.red());
-                } else if text.contains("WARN") {
-                    println!("{}", text.yellow());
-                } else {
-                    println!("{}", colorize(&format!("[{}] {}", pod_name, text)));
+                let is_match = match &args.match_text {
+                    Some(pattern) => {
+                        let pattern_lower = pattern.to_lowercase();
+                        let text_lower = text.to_lowercase();
+                        text_lower.contains(&pattern_lower)
+                    }
+                    None => true, // no filter - so show all
+                };
+
+                if args.invert_match ^ is_match {
+                    if text.contains("ERROR") {
+                        println!("{}", text.red());
+                    } else if text.contains("WARN") {
+                        println!("{}", text.yellow());
+                    } else {
+                        println!("{}", colorize(&format!("[{}] {}", pod_name, text)));
+                    }
                 }
             }
             Err(e) => eprintln!("Error reading line: {}", e),
