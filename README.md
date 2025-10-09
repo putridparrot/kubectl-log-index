@@ -54,7 +54,8 @@ We also have the option to merge logs from multiple pods with the same partial n
 kubectl log index <pod-partial-name> <space-delimited-indicies> --namespace <namespace>
 ```
 
-In such situations, by default the logs for each pod are coloured differently. If you want to merge the logs, you can use the --no-color option. 
+In such situations, by default the logs for each pod are coloured differently. If you want to disabled the colours, you can use the --no-color option. Colours 
+are rotated and hence you could end up with the same colour for multiple pods. At the moment there are eight colours, more may be added in the future. 
 
 ```aiignore
 kubectl log index <pod-partial-name> <space-delimited-indicies> --namespace <namespace> --color=auto
