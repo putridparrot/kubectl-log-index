@@ -1,4 +1,4 @@
-﻿use clap::{Parser, ValueEnum};
+﻿use clap::{Parser, ValueEnum, ArgAction};
 
 #[derive(ValueEnum, Clone, Debug)]
 pub enum ColorChoice {
@@ -31,12 +31,12 @@ pub struct Args {
     /// Control colored output: always, auto, or never
     #[arg(long, default_value = "auto")]
     pub color: ColorChoice,
-    /// Merge all pod logs into a single stream 
+    /// Merge all pod logs into a single stream
     #[arg(short='a', long="all-pods")]
     pub all_pods: bool,
     /// Show only lines with matching text
-    #[arg(long="match")]
-    pub match_text: Option<String>,
+    #[arg(long = "match", value_name = "TEXT", num_args = 1.., action = ArgAction::Append)]
+    pub match_text: Vec<String>,
     /// Show only lines not matching text
     #[arg(long="invert-match")]
     pub invert_match: bool,

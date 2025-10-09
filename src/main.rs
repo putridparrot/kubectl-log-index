@@ -116,17 +116,16 @@ fn fetch_logs_for_pod(args: &Args, namespace: &str, pod_name: &str,
     let stdout = child.stdout.take().expect("Failed to capture stdout");
     let reader = BufReader::new(stdout);
 
+    let patterns: Vec<String> = args.match_text
+        .iter()
+        .map(|p| p.to_lowercase())
+        .collect();
+
     for line in reader.lines() {
         match line {
             Ok(text) => {
-                let is_match = match &args.match_text {
-                    Some(pattern) => {
-                        let pattern_lower = pattern.to_lowercase();
-                        let text_lower = text.to_lowercase();
-                        text_lower.contains(&pattern_lower)
-                    }
-                    None => true, // no filter - so show all
-                };
+                let text_lower = text.to_lowercase();
+                let is_match = patterns.iter().any(|p| text_lower.contains(p));
 
                 if args.invert_match ^ is_match {
                     if text.contains("ERROR") {
