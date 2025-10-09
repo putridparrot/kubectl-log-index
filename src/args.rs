@@ -31,7 +31,13 @@ pub struct Args {
     /// Control colored output: always, auto, or never
     #[arg(long, default_value = "auto")]
     pub color: ColorChoice,
-    /// Follow the log stream
+    /// Merge all pod logs into a single stream 
     #[arg(short='a', long="all-pods")]
     pub all_pods: bool,
+    /// Show only lines with matching text
+    #[arg(long="match")]
+    pub match_text: Option<String>,
+    /// Show only lines not matching text
+    #[arg(long="invert-match")]
+    pub invert_match: bool,
 }
