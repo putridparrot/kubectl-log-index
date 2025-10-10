@@ -1,5 +1,7 @@
 ﻿# kubectl-log-index
 
+[![Rust](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml/badge.svg)](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml)
+
 kubectl-log-index is a kubectl plugin that allows you to log from a pod via a partial name and index. For example
 you might have multiple pods with the same name running within a namespace.
 
@@ -19,13 +21,15 @@ kubectl log index echo 3 -n dev
 
 where kube is the pod has a partial name _echo_ and there are at least 4 pods with this partial name, hence 3 is the index of the pod we want to log.
 
-# Installation
+# Build
 
 Build using
 
 ```aiignore
 cargo build --release
 ```
+
+# Installation
 
 Kubectl plugins are just executables named with the prefix kubectl-, placed in your $PATH, so you can copy the binary to a folder in your PATH, for example
 
