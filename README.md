@@ -1,6 +1,6 @@
 ﻿# kubectl-log-index
 
-[![Rust](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml/badge.svg)](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml)
+[![Build](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml/badge.svg)](https://github.com/putridparrot/kubectl-log-index/actions/workflows/rust.yml)
 
 kubectl-log-index is a kubectl plugin that allows you to log from a pod via a partial name and index. For example
 you might have multiple pods with the same name running within a namespace.
