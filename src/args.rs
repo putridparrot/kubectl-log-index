@@ -23,7 +23,7 @@ pub struct Args {
     #[arg(short = 'f', long)]
     pub follow: bool,
     /// Lines from the end of the logs to show
-    #[arg(long)]
+    #[arg(short, long)]
     pub tail: Option<i64>,
     /// Kubernetes namespace (optional)
     #[arg(short, long)]

@@ -104,7 +104,7 @@ fn fetch_logs_for_pod(args: &Args, namespace: &str, pod_name: &str,
     }
 
     if args.tail.is_some() {
-        cmd.arg("-t")
+        cmd.arg("--tail")
             .arg(args.tail.unwrap_or(1000)
                 .to_string()
                 .as_str());
