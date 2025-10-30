@@ -125,7 +125,7 @@ fn fetch_logs_for_pod(args: &Args, namespace: &str, pod_name: &str,
         match line {
             Ok(text) => {
                 let text_lower = text.to_lowercase();
-                let is_match = patterns.iter().any(|p| text_lower.contains(p));
+                let is_match = patterns.len() == 0 || patterns.iter().any(|p| text_lower.contains(p));
 
                 if args.invert_match ^ is_match {
                     if text.contains("ERROR") {
