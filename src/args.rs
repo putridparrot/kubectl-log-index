@@ -28,6 +28,9 @@ pub struct Args {
     /// Kubernetes namespace (optional)
     #[arg(short, long)]
     pub namespace: Option<String>,
+    /// Wait up to this many seconds for matching pods to appear before failing
+    #[arg(long = "wait-for-pods", value_name = "SECONDS")]
+    pub wait_for_pods: Option<u64>,
     /// Control colored output: always, auto, or never
     #[arg(long, default_value = "auto")]
     pub color: ColorChoice,

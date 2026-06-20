@@ -13,6 +13,7 @@ use kube::runtime::reflector::Lookup;
 use crate::args::{Args, ColorChoice};
 use std::thread;
 use atty::Stream;
+use tokio::time::{sleep, Duration, Instant};
 
 /// kubectl plugin to get logs by container index
 #[tokio::main]
@@ -24,7 +25,15 @@ async fn main() -> Result<()> {
     let client = Client::try_default().await?;
     let pods: Api<Pod> = Api::namespaced(client, namespace.as_str());
 
-    let pod_list = find_matching_pods(pods, &args.pod_part).await.expect("Failed to find matching pods");
+    let pod_list = find_matching_pods_with_wait(
+        pods,
+        &args.pod_part,
+        args.wait_for_pods,
+        args.all_pods,
+        &args.index,
+        &args.positional_indices,
+    )
+    .await?;
 
     let indices = args.index.clone().unwrap_or_default()
         .into_iter()
@@ -146,7 +155,7 @@ fn fetch_logs_for_pod(args: &Args, namespace: &str, pod_name: &str,
 pub async fn find_matching_pods(
     pods: Api<Pod>,
     partial: &str,
-) -> Result<Vec<Pod>, Box<dyn std::error::Error>> {
+) -> Result<Vec<Pod>> {
     let pod_list = pods.list(&ListParams::default()).await?;
 
     let matches: Vec<Pod> = pod_list.items
@@ -160,6 +169,72 @@ pub async fn find_matching_pods(
         .collect();
 
     Ok(matches)
+}
+
+async fn find_matching_pods_with_wait(
+    pods: Api<Pod>,
+    partial: &str,
+    wait_for_pods: Option<u64>,
+    all_pods: bool,
+    index: &Option<Vec<usize>>,
+    positional_indices: &[usize],
+) -> Result<Vec<Pod>> {
+    let required_pod_count = required_pod_count(all_pods, index, positional_indices);
+
+    if let Some(wait_for_pods) = wait_for_pods {
+        let deadline = Instant::now() + Duration::from_secs(wait_for_pods);
+
+        loop {
+            let matches = find_matching_pods(pods.clone(), partial).await?;
+            if matches.len() >= required_pod_count {
+                return Ok(matches);
+            }
+
+            if Instant::now() >= deadline {
+                break;
+            }
+
+            sleep(Duration::from_secs(1)).await;
+        }
+
+        let matches = find_matching_pods(pods, partial).await?;
+        if matches.len() >= required_pod_count {
+            Ok(matches)
+        } else {
+            Err(anyhow::anyhow!(
+                "Timed out waiting {} seconds for {} matching pod(s); found {}",
+                wait_for_pods,
+                required_pod_count,
+                matches.len()
+            ))
+        }
+    } else {
+        let matches = find_matching_pods(pods, partial).await?;
+        if matches.len() >= required_pod_count {
+            Ok(matches)
+        } else {
+            Err(anyhow::anyhow!(
+                "Found {} matching pod(s), but {} required",
+                matches.len(),
+                required_pod_count
+            ))
+        }
+    }
+}
+
+fn required_pod_count(all_pods: bool, index: &Option<Vec<usize>>, positional_indices: &[usize]) -> usize {
+    if all_pods {
+        1
+    } else {
+        index
+            .iter()
+            .flatten()
+            .chain(positional_indices.iter())
+            .copied()
+            .max()
+            .map(|max_index| max_index + 1)
+            .unwrap_or(1)
+    }
 }
 
 fn should_color(color: &ColorChoice) -> bool {
